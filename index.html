@@ -42,7 +42,7 @@
             border-radius: 50%;
             border: 4px solid orange;
             margin-bottom: 15px;
-            cursor: pointer; /* für Klick auf Bewertung */
+            cursor: pointer; /* klickbar für Bewertung */
         }
 
         h1 {
@@ -100,7 +100,7 @@
 
         /* Overlay für Bewertung */
         #ratingOverlay {
-            display: none;
+            display: none; /* versteckt standardmäßig */
             position: fixed;
             top:0;
             left:0;
@@ -123,7 +123,7 @@
 
         .stars {
             display: flex;
-            flex-direction: row; /* wichtig für Links-nach-Rechts */
+            flex-direction: row; /* links-nach-rechts */
             justify-content: center;
         }
 
@@ -137,17 +137,6 @@
         /* ausgewählte Sterne orange */
         .stars span.selected {
             color: orange;
-        }
-
-        #closeRating {
-            margin-top: 15px;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            background-color: orange;
-            color: black;
-            cursor: pointer;
-            font-weight: bold;
         }
     </style>
 </head>
@@ -184,7 +173,6 @@
                 <span data-value="4">&#9733;</span>
                 <span data-value="5">&#9733;</span>
             </div>
-            <button id="closeRating">Schließen</button>
         </div>
     </div>
 
@@ -192,25 +180,18 @@
         const profilePic = document.getElementById('profilePic');
         const overlay = document.getElementById('ratingOverlay');
         const stars = document.querySelectorAll('.stars span');
-        const closeBtn = document.getElementById('closeRating');
 
-        // Overlay öffnen
+        // Overlay öffnen beim Klick auf Profilbild
         profilePic.addEventListener('click', () => {
             overlay.style.display = 'flex';
         });
 
-        // Overlay schließen
-        closeBtn.addEventListener('click', () => {
-            overlay.style.display = 'none';
-        });
-
-        // Sterne anklickbar machen (von links nach rechts)
+        // Sterne anklickbar machen
         stars.forEach((star, index) => {
             star.addEventListener('mouseover', () => {
-                // Hover-Effekt nur temporär
+                // Hover-Effekt links-nach-rechts
                 stars.forEach((s, i) => {
-                    if(i <= index) s.style.color = 'orange';
-                    else s.style.color = 'lightgray';
+                    s.style.color = i <= index ? 'orange' : 'lightgray';
                 });
             });
 
@@ -230,6 +211,7 @@
                     stars[i].style.color = 'orange';
                 }
                 alert(`Danke für deine Bewertung: ${index + 1} Sterne!`);
+                overlay.style.display = 'none'; // Popup sofort schließen
             });
         });
     </script>
