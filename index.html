@@ -121,6 +121,12 @@
             text-align: center;
         }
 
+        .stars {
+            display: flex;
+            flex-direction: row; /* wichtig für Links-nach-Rechts */
+            justify-content: center;
+        }
+
         .stars span {
             font-size: 40px;
             cursor: pointer;
@@ -128,10 +134,8 @@
             transition: color 0.2s;
         }
 
-        /* aktive/hover Sterne = Orange */
-        .stars span.selected,
-        .stars span:hover,
-        .stars span:hover ~ span {
+        /* ausgewählte Sterne orange */
+        .stars span.selected {
             color: orange;
         }
 
@@ -200,15 +204,32 @@
             overlay.style.display = 'none';
         });
 
-        // Sterne anklickbar machen
-        stars.forEach(star => {
+        // Sterne anklickbar machen (von links nach rechts)
+        stars.forEach((star, index) => {
+            star.addEventListener('mouseover', () => {
+                // Hover-Effekt nur temporär
+                stars.forEach((s, i) => {
+                    if(i <= index) s.style.color = 'orange';
+                    else s.style.color = 'lightgray';
+                });
+            });
+
+            star.addEventListener('mouseout', () => {
+                // Nach Hover nur ausgewählte Sterne orange
+                stars.forEach(s => {
+                    if(s.classList.contains('selected')) s.style.color = 'orange';
+                    else s.style.color = 'lightgray';
+                });
+            });
+
             star.addEventListener('click', () => {
-                const value = star.getAttribute('data-value');
+                // Auswahl speichern
                 stars.forEach(s => s.classList.remove('selected'));
-                for(let i = 0; i < value; i++){
+                for(let i = 0; i <= index; i++){
                     stars[i].classList.add('selected');
+                    stars[i].style.color = 'orange';
                 }
-                alert(`Danke für deine Bewertung: ${value} Sterne!`);
+                alert(`Danke für deine Bewertung: ${index + 1} Sterne!`);
             });
         });
     </script>
