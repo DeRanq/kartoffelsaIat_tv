@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KartoffeIsalat_tv</title>
 
-    <!-- Favicon (optional, kannst du ersetzen) -->
+    <!-- Favicon (optional) -->
     <link rel="icon" href="favicon.png" type="image/png">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -42,6 +42,7 @@
             border-radius: 50%;
             border: 4px solid orange;
             margin-bottom: 15px;
+            cursor: pointer; /* für Klick auf Bewertung */
         }
 
         h1 {
@@ -55,7 +56,7 @@
             margin-bottom: 20px;
         }
 
-        /* Button-Stil */
+        /* Buttons */
         .button {
             display: flex;
             align-items: center;
@@ -65,48 +66,92 @@
             max-width: 300px;
             margin: 10px auto;
             padding: 16px;
-
             background-color: orange;
             color: black;
             text-decoration: none;
             font-weight: bold;
             border-radius: 30px;
             font-size: 16px;
-
-            /* Smooth Hover-Animation */
             transition: transform 0.2s ease, background-color 0.2s ease;
         }
 
-        /* Hover nur auf Geräten mit Maus */
+        /* Hover nur für Mausgeräte */
         @media (hover: hover) and (pointer: fine) {
             .button:hover {
-                transform: scale(1.05); /* 5% größer */
+                transform: scale(1.05); /* Zoom */
                 background-color: darkorange;
             }
         }
 
-        /* Kleine Displays (Handy) */
+        /* Kleine Displays */
         @media (max-width: 400px) {
             img {
                 width: 120px;
                 height: 120px;
             }
-
             h1 {
                 font-size: 20px;
             }
-
             .button {
                 font-size: 15px;
                 padding: 14px;
             }
+        }
+
+        /* Overlay für Bewertung */
+        #ratingOverlay {
+            display: none;
+            position: fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .ratingBox {
+            background: white;
+            color: black;
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stars span {
+            font-size: 40px;
+            cursor: pointer;
+            color: lightgray; /* inaktive Sterne */
+            transition: color 0.2s;
+        }
+
+        /* aktive/hover Sterne = Orange */
+        .stars span.selected,
+        .stars span:hover,
+        .stars span:hover ~ span {
+            color: orange;
+        }
+
+        #closeRating {
+            margin-top: 15px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: orange;
+            color: black;
+            cursor: pointer;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/7b7013a5-a73e-4429-b408-574835d3df64-profile_image-70x70.jpeg">
+        <!-- Profilbild klickbar -->
+        <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/7b7013a5-a73e-4429-b408-574835d3df64-profile_image-70x70.jpeg" id="profilePic" alt="Profilbild">
 
         <h1>KartoffeIsalat_tv</h1>
         <div class="username">@KartoffeIsalat_tv</div>
@@ -123,5 +168,49 @@
             <i class="fa-brands fa-discord"></i> Discord
         </a>
     </div>
+
+    <!-- Overlay für 5-Sterne Bewertung -->
+    <div id="ratingOverlay">
+        <div class="ratingBox">
+            <h2>Bewerte mich!</h2>
+            <div class="stars">
+                <span data-value="1">&#9733;</span>
+                <span data-value="2">&#9733;</span>
+                <span data-value="3">&#9733;</span>
+                <span data-value="4">&#9733;</span>
+                <span data-value="5">&#9733;</span>
+            </div>
+            <button id="closeRating">Schließen</button>
+        </div>
+    </div>
+
+    <script>
+        const profilePic = document.getElementById('profilePic');
+        const overlay = document.getElementById('ratingOverlay');
+        const stars = document.querySelectorAll('.stars span');
+        const closeBtn = document.getElementById('closeRating');
+
+        // Overlay öffnen
+        profilePic.addEventListener('click', () => {
+            overlay.style.display = 'flex';
+        });
+
+        // Overlay schließen
+        closeBtn.addEventListener('click', () => {
+            overlay.style.display = 'none';
+        });
+
+        // Sterne anklickbar machen
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+                stars.forEach(s => s.classList.remove('selected'));
+                for(let i = 0; i < value; i++){
+                    stars[i].classList.add('selected');
+                }
+                alert(`Danke für deine Bewertung: ${value} Sterne!`);
+            });
+        });
+    </script>
 </body>
 </html>
